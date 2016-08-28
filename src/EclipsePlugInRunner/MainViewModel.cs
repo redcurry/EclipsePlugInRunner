@@ -26,6 +26,8 @@ namespace EclipsePlugInRunner
             _settingsRepo = new SettingsRepository();
 
             OpenPatientContextCommand = new RelayCommand(OpenPatientContext);
+            RemovePatientContextCommand = new RelayCommand(RemovePatientContext);
+            RemoveAllPatientContextsCommand = new RelayCommand(RemoveAllPatientContexts);
             RunWithPatientContextCommand = new RelayCommand(RunWithPatientContext);
 
             OpenPatientCommand = new RelayCommand(OpenPatient);
@@ -38,6 +40,8 @@ namespace EclipsePlugInRunner
         public event EventHandler ExitRequested;
 
         public ICommand OpenPatientContextCommand { get; private set; }
+        public ICommand RemovePatientContextCommand { get; private set; }
+        public ICommand RemoveAllPatientContextsCommand { get; private set; }
         public ICommand RunWithPatientContextCommand { get; private set; }
 
         public ICommand OpenPatientCommand { get; private set; }
@@ -122,6 +126,18 @@ namespace EclipsePlugInRunner
             SelectedPlanSetup = PlanSetupsInScope
                 .Single(p => p.Id == SelectedPatientContext.ActivePlanSetup.Id
                              && p.CourseId == SelectedPatientContext.ActivePlanSetup.CourseId);
+        }
+
+        private void RemovePatientContext()
+        {
+            RecentPatientContexts.Remove(SelectedPatientContext);
+            SelectedPatientContext = null;
+        }
+
+        private void RemoveAllPatientContexts()
+        {
+            RecentPatientContexts.Clear();
+            SelectedPatientContext = null;
         }
 
         private void RunWithPatientContext()

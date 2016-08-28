@@ -1,0 +1,195 @@
+﻿<Window
+    x:Class="EclipsePlugInRunner.MainWindow"
+    x:ClassModifier="internal"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    Title="Eclipse Plug-In Runner"
+    Loaded="MainWindow_OnLoaded"
+    Closed="MainWindow_OnClosed"
+    Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
+    WindowStartupLocation="CenterScreen"
+    Width="640" Height="480"
+    >
+
+    <Window.Resources>
+
+        <!-- All PlanSetups and PlanSums, sorted by creation time, grouped by course -->
+        <CollectionViewSource x:Key="PlanningItemsView" Source="{Binding PlanningItems}">
+            <CollectionViewSource.SortDescriptions>
+                <cm:SortDescription PropertyName="CreationDateTime" />
+            </CollectionViewSource.SortDescriptions>
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="CourseId" />
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>
+
+        <!-- Selected PlanSetups, sorted by creation time, grouped by course -->
+        <CollectionViewSource x:Key="PlanSetupsInScopeView" Source="{Binding PlanSetupsInScope}">
+            <CollectionViewSource.SortDescriptions>
+                <cm:SortDescription PropertyName="CreationDateTime" />
+            </CollectionViewSource.SortDescriptions>
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="CourseId" />
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>
+
+        <DataTemplate x:Key="CourseHeaderTemplate">
+            <TextBlock
+                Text="{Binding Name, StringFormat=Course: \{0\}}"
+                FontWeight="Bold"
+                Opacity="0.66"
+                />
+        </DataTemplate>
+
+        <Style x:Key="PlanningItemsContainerStyle" TargetType="GroupItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GroupItem">
+                        <StackPanel>
+                            <ContentPresenter Margin="6,4,0,0" />
+                            <ItemsPresenter Margin="4,2,0,0"/>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+    <Grid
+        FocusManager.FocusedElement="{Binding ElementName=PatientIdTextBox}"
+        Margin="8"
+        >
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Patient ID -->
+        <StackPanel
+            Grid.Row="0"
+            Orientation="Horizontal"
+            >
+            <TextBlock
+                Text="Patient ID1:"
+                VerticalAlignment="Center"
+                />
+            <TextBox
+                Name="PatientIdTextBox"
+                Text="{Binding PatientId, UpdateSourceTrigger=PropertyChanged}"
+                Width="128"
+                Margin="4,0,0,0"
+                />
+            <Button
+                Content="Open"
+                IsDefault="True"
+                Command="{Binding OpenPatientCommand}"
+                Width="73" Height="21"
+                Margin="8,0,0,0"
+                />
+        </StackPanel>
+
+        <!-- Lists of ESAPI objects -->
+        <Grid
+            Grid.Row="1"
+            Margin="0,8,0,0"
+            >
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- All PlanSetups and PlanSums -->
+            <DockPanel
+                Grid.Column="0"
+                Margin="0,0,4,0"
+                >
+                <TextBlock
+                    DockPanel.Dock="Top"
+                    Text="Set the PlanSetup(s) and PlanSum(s) is scope:"
+                    />
+                <ListView
+                    DockPanel.Dock="Top"
+                    ItemsSource="{Binding Source={StaticResource PlanningItemsView}}"
+                    Margin="0,4,0,0"
+                    >
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox
+                                Content="{Binding Id}"
+                                IsChecked="{Binding IsChecked}"
+                                />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.GroupStyle>
+                        <GroupStyle
+                            HeaderTemplate="{StaticResource CourseHeaderTemplate}"
+                            ContainerStyle="{StaticResource PlanningItemsContainerStyle}"
+                            />
+                    </ItemsControl.GroupStyle>
+                </ListView>
+            </DockPanel>
+
+            <!-- Active PlanSetup -->
+            <DockPanel
+                Grid.Column="1"
+                Margin="4,0,0,0"
+                >
+                <TextBlock
+                    DockPanel.Dock="Top"
+                    Text="Set the active PlanSetup:"
+                    />
+                <ListBox
+                    DockPanel.Dock="Top"
+                    ItemsSource="{Binding Source={StaticResource PlanSetupsInScopeView}}"
+                    SelectedItem="{Binding SelectedPlanSetup}"
+                    DisplayMemberPath="Id"
+                    Margin="0,4,0,0"
+                    >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding RunScriptCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <ItemsControl.GroupStyle>
+                        <GroupStyle
+                            HeaderTemplate="{StaticResource CourseHeaderTemplate}"
+                            ContainerStyle="{StaticResource PlanningItemsContainerStyle}"
+                            />
+                    </ItemsControl.GroupStyle>
+                </ListBox>
+            </DockPanel>
+        </Grid>
+
+        <!-- Run and Exit buttons -->
+        <StackPanel
+            Grid.Row="2"
+            Orientation="Horizontal"
+            HorizontalAlignment="Right"
+            Margin="0,8,0,0"
+            >
+            <CheckBox
+                Content="Exit after plug-in script ends"
+                IsChecked="{Binding ShouldExit}"
+                VerticalAlignment="Center"
+                />
+            <Button
+                Content="Run"
+                Command="{Binding RunScriptCommand}"
+                Width="73" Height="21"
+                Margin="8,0,0,0"
+                />
+            <Button
+                Content="Exit"
+                Command="{Binding ExitCommand}"
+                Width="73" Height="21"
+                Margin="8,0,0,0"
+                />
+        </StackPanel>
+    </Grid>
+</Window>

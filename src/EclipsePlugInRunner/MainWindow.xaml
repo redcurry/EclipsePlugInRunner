@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:cm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:local="clr-namespace:EclipsePlugInRunner"
     Title="Eclipse Plug-In Runner"
     Loaded="MainWindow_OnLoaded"
     Closed="MainWindow_OnClosed"
@@ -56,6 +57,8 @@
             </Setter>
         </Style>
 
+        <local:PlanningItemsConverter x:Key="PlanningItemsConverter" />
+
     </Window.Resources>
 
     <Grid
@@ -65,14 +68,115 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- Patient ID -->
+        <!-- Recent patient contexts -->
         <StackPanel
             Grid.Row="0"
+            >
+            <TextBlock
+                Text="Recent patient contexts (double-click to run script):"
+                />
+
+            <Grid
+                Margin="0,4,0,0"
+                >
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <DataGrid
+                    Grid.Column="0"
+                    ItemsSource="{Binding RecentPatientContexts}"
+                    SelectedItem="{Binding SelectedPatientContext}"
+                    AutoGenerateColumns="False"
+                    IsReadOnly="True"
+                    SelectionUnit="FullRow"
+                    HeadersVisibility="Column"
+                    GridLinesVisibility="None"
+                    Background="White"
+                    Height="128"
+                    >
+
+                    <DataGrid.Columns>
+
+                        <!-- Patient ID -->
+                        <DataGridTextColumn
+                            Header="Patient ID1"
+                            Binding="{Binding PatientId}"
+                            Width="*"
+                            >
+                        </DataGridTextColumn>
+
+                        <!-- PlanningItems in scope -->
+                        <DataGridTextColumn
+                            Header="PlanningItem(s) in Scope"
+                            Binding="{Binding PlanningItemsInScope,
+                                Converter={StaticResource PlanningItemsConverter}}"
+                            Width="2*"
+                            >
+                        </DataGridTextColumn>
+
+                        <!-- Active PlanSetup -->
+                        <DataGridTextColumn
+                            Header="Active PlanSetup"
+                            Binding="{Binding ActivePlanSetup.Id}"
+                            Width="*"
+                            >
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+
+                    <!-- Remove selection box around individual cells -->
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="BorderThickness" Value="0" />
+                        </Style>
+                    </DataGrid.CellStyle>
+
+                    <!-- Double-click to open and run recent patient context -->
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding RunWithPatientContextCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </DataGrid>
+
+                <!-- Open, Remove, and Remove All buttons -->
+                <StackPanel
+                    Grid.Column="1"
+                    Margin="8,0,0,0"
+                    >
+                    <Button
+                        Content="Open"
+                        Command="{Binding OpenPatientContextCommand}"
+                        Width="92" Height="21"
+                        />
+                    <Button
+                        Content="Remove"
+                        Command="{Binding RemovePatientContextCommand}"
+                        Width="92" Height="21"
+                        Margin="0,8,0,0"
+                        />
+                    <Button
+                        Content="Remove All"
+                        Command="{Binding RemoveAllPatientContextsCommand}"
+                        Width="92" Height="21"
+                        Margin="0,8,0,0"
+                        />
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+
+        <!-- Patient ID -->
+        <StackPanel
+            Grid.Row="1"
             Orientation="Horizontal"
+            Margin="0,8,0,0"
             >
             <TextBlock
                 Text="Patient ID1:"
@@ -95,7 +199,7 @@
 
         <!-- Lists of ESAPI objects -->
         <Grid
-            Grid.Row="1"
+            Grid.Row="2"
             Margin="0,8,0,0"
             >
 
@@ -168,7 +272,7 @@
 
         <!-- Run and Exit buttons -->
         <StackPanel
-            Grid.Row="2"
+            Grid.Row="3"
             Orientation="Horizontal"
             HorizontalAlignment="Right"
             Margin="0,8,0,0"

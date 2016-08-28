@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows.Data;
 using EclipsePlugInRunner.Data;
 
-namespace EclipsePlugInRunner
+namespace EclipsePlugInRunner.Views
 {
     internal class PlanningItemsConverter : IValueConverter
     {

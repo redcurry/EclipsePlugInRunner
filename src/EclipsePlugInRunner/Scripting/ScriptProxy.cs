@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Windows;
 using VMS.TPS.Common.Model.API;
 
-namespace EclipsePlugInRunner
+namespace EclipsePlugInRunner.Scripting
 {
     internal class ScriptProxy
     {

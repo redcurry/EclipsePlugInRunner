@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 
-namespace EclipsePlugInRunner
+namespace EclipsePlugInRunner.Helpers
 {
     internal static class EsapiExtensions
     {

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Windows;
+using EclipsePlugInRunner.ViewModels;
 
-namespace EclipsePlugInRunner
+namespace EclipsePlugInRunner.Views
 {
     internal partial class MainWindow : Window
     {

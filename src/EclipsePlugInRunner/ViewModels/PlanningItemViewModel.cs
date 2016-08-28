@@ -1,8 +1,9 @@
 using System;
+using EclipsePlugInRunner.Helpers;
 using GalaSoft.MvvmLight;
 using VMS.TPS.Common.Model.API;
 
-namespace EclipsePlugInRunner
+namespace EclipsePlugInRunner.ViewModels
 {
     internal class PlanningItemViewModel : ViewModelBase
     {

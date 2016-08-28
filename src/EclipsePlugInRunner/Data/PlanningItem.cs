@@ -16,5 +16,12 @@
 
             return false;
         }
+
+        // Do not bother with calculating a hashcode,
+        // but overriding it stops a compiler warning
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

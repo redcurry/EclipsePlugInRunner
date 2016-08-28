@@ -1,11 +1,11 @@
 ﻿<Window
-    x:Class="EclipsePlugInRunner.MainWindow"
+    x:Class="EclipsePlugInRunner.Views.MainWindow"
     x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:cm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-    xmlns:local="clr-namespace:EclipsePlugInRunner"
+    xmlns:views="clr-namespace:EclipsePlugInRunner.Views"
     Title="Eclipse Plug-In Runner"
     Loaded="MainWindow_OnLoaded"
     Closed="MainWindow_OnClosed"
@@ -57,7 +57,7 @@
             </Setter>
         </Style>
 
-        <local:PlanningItemsConverter x:Key="PlanningItemsConverter" />
+        <views:PlanningItemsConverter x:Key="PlanningItemsConverter" />
 
     </Window.Resources>
 

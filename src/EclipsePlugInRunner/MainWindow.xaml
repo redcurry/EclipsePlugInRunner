@@ -137,6 +137,13 @@
                             <Setter Property="BorderThickness" Value="0" />
                         </Style>
                     </DataGrid.CellStyle>
+
+                    <!-- Double-click to open and run recent patient context -->
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding RunWithPatientContextCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                 </DataGrid>
 
                 <!-- Open, Remove, and Remove All buttons -->

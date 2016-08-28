@@ -26,6 +26,7 @@ namespace EclipsePlugInRunner
             _settingsRepo = new SettingsRepository();
 
             OpenPatientContextCommand = new RelayCommand(OpenPatientContext);
+            RunWithPatientContextCommand = new RelayCommand(RunWithPatientContext);
 
             OpenPatientCommand = new RelayCommand(OpenPatient);
             RunScriptCommand = new RelayCommand(RunScript);
@@ -37,6 +38,7 @@ namespace EclipsePlugInRunner
         public event EventHandler ExitRequested;
 
         public ICommand OpenPatientContextCommand { get; private set; }
+        public ICommand RunWithPatientContextCommand { get; private set; }
 
         public ICommand OpenPatientCommand { get; private set; }
         public ICommand RunScriptCommand { get; private set; }
@@ -120,6 +122,12 @@ namespace EclipsePlugInRunner
             SelectedPlanSetup = PlanSetupsInScope
                 .Single(p => p.Id == SelectedPatientContext.ActivePlanSetup.Id
                              && p.CourseId == SelectedPatientContext.ActivePlanSetup.CourseId);
+        }
+
+        private void RunWithPatientContext()
+        {
+            OpenPatientContext();
+            RunScript();
         }
 
         private void OpenPatient()

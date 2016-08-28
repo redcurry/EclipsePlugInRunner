@@ -23,6 +23,8 @@ namespace EclipsePlugInRunner
             _scriptProxy = new ScriptProxy(script);
             _settingsRepo = new SettingsRepository();
 
+            OpenPatientContextCommand = new RelayCommand(OpenPatientContext);
+
             OpenPatientCommand = new RelayCommand(OpenPatient);
             RunScriptCommand = new RelayCommand(RunScript);
             ExitCommand = new RelayCommand(Exit);
@@ -31,6 +33,8 @@ namespace EclipsePlugInRunner
         }
 
         public event EventHandler ExitRequested;
+
+        public ICommand OpenPatientContextCommand { get; private set; }
 
         public ICommand OpenPatientCommand { get; private set; }
         public ICommand RunScriptCommand { get; private set; }
@@ -98,6 +102,24 @@ namespace EclipsePlugInRunner
             }
         }
 
+        private void OpenPatientContext()
+        {
+            PatientId = SelectedPatientContext.PatientId;
+
+            OpenPatient();
+
+            foreach (var planningItem in SelectedPatientContext.PlanningItemsInScope)
+            {
+                var pi = PlanningItems
+                    .First(p => p.Id == planningItem.Id && p.CourseId == planningItem.CourseId);
+                pi.IsChecked = true;  // Will add it to PlanSetupsInScope
+            }
+
+            SelectedPlanSetup = PlanSetupsInScope
+                .Single(p => p.Id == SelectedPatientContext.ActivePlanSetup.Id
+                             && p.CourseId == SelectedPatientContext.ActivePlanSetup.CourseId);
+        }
+
         private void OpenPatient()
         {
             _app.ClosePatient();   // Close previous patient, if any
@@ -147,6 +169,8 @@ namespace EclipsePlugInRunner
 
         private void RunScript()
         {
+            UpdateRecentPatientContexts();
+
             _scriptProxy.RunWithNewWindow(CreatePlugInScriptContext());
 
             if (ShouldExit)
@@ -189,16 +213,61 @@ namespace EclipsePlugInRunner
 
         private void Exit()
         {
+            WriteSettings();
             OnExitRequested();
+        }
+
+        private void UpdateRecentPatientContexts()
+        {
+            var patientContext = new PatientContext();
+
+            patientContext.PatientId = _patientId;
+            patientContext.ActivePlanSetup = MapPlanningItemViewModelToData(SelectedPlanSetup);
+
+            foreach (var planningItemsInScope in PlanningItems.Where(p => p.IsChecked))
+            {
+                patientContext.PlanningItemsInScope
+                    .Add(MapPlanningItemViewModelToData(planningItemsInScope));
+            }
+
+            RecentPatientContexts.Insert(0, patientContext);
+
+            if (RecentPatientContexts.Count > 5)
+            {
+                RecentPatientContexts.Remove(RecentPatientContexts.Last());
+            }
+        }
+
+        private Data.PlanningItem MapPlanningItemViewModelToData(
+            PlanningItemViewModel planningItemVm)
+        {
+            return new Data.PlanningItem
+            {
+                Id = planningItemVm.Id,
+                CourseId = planningItemVm.CourseId
+            };
         }
 
         private void LoadSettings()
         {
             var settings = _settingsRepo.ReadSettings();
 
-            ShouldExit = settings.ShouldExitAfterScriptEnds;
-            RecentPatientContexts =
-                new ObservableCollection<PatientContext>(settings.RecentPatientContexts);
+            if (settings != null)
+            {
+                ShouldExit = settings.ShouldExitAfterScriptEnds;
+                RecentPatientContexts =
+                    new ObservableCollection<PatientContext>(settings.RecentPatientContexts);
+            }
+        }
+
+        private void WriteSettings()
+        {
+            var settings = new Settings();
+
+            settings.ShouldExitAfterScriptEnds = ShouldExit;
+            settings.RecentPatientContexts = RecentPatientContexts.ToList();
+
+            _settingsRepo.WriteSettings(settings);
         }
     }
 }

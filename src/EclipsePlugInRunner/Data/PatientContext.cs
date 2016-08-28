@@ -10,7 +10,7 @@ namespace EclipsePlugInRunner.Data
         }
 
         public string PatientId { get; set; }
-        public string PlanSetupId { get; set; }
+        public PlanningItem ActivePlanSetup { get; set; }
         public List<PlanningItem> PlanningItemsInScope { get; set; }
     }
 }

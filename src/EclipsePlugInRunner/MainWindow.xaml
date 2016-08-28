@@ -125,7 +125,7 @@
                         <!-- Active PlanSetup -->
                         <DataGridTextColumn
                             Header="Active PlanSetup"
-                            Binding="{Binding PlanSetupId}"
+                            Binding="{Binding ActivePlanSetup.Id}"
                             Width="*"
                             >
                         </DataGridTextColumn>

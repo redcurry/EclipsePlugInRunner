@@ -12,6 +12,8 @@ namespace EclipsePlugInRunner
 {
     internal class MainViewModel : ViewModelBase
     {
+        private const int MaximumNumberOfRecentPatientContexts = 5;
+
         private readonly ScriptProxy _scriptProxy;
         private readonly SettingsRepository _settingsRepo;
 
@@ -232,7 +234,7 @@ namespace EclipsePlugInRunner
 
             RecentPatientContexts.Insert(0, patientContext);
 
-            if (RecentPatientContexts.Count > 5)
+            if (RecentPatientContexts.Count > MaximumNumberOfRecentPatientContexts)
             {
                 RecentPatientContexts.Remove(RecentPatientContexts.Last());
             }

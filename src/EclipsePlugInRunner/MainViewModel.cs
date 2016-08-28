@@ -256,11 +256,19 @@ namespace EclipsePlugInRunner
                     .Add(MapPlanningItemViewModelToData(planningItemsInScope));
             }
 
-            RecentPatientContexts.Insert(0, patientContext);
-
-            if (RecentPatientContexts.Count > MaximumNumberOfRecentPatientContexts)
+            if (RecentPatientContexts.Contains(patientContext))
             {
-                RecentPatientContexts.Remove(RecentPatientContexts.Last());
+                var index = RecentPatientContexts.IndexOf(patientContext);
+                RecentPatientContexts.Move(index, 0);
+            }
+            else
+            {
+                RecentPatientContexts.Insert(0, patientContext);
+
+                if (RecentPatientContexts.Count > MaximumNumberOfRecentPatientContexts)
+                {
+                    RecentPatientContexts.Remove(RecentPatientContexts.Last());
+                }
             }
         }
 

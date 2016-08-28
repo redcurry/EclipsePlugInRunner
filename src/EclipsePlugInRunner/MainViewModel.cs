@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using EclipsePlugInRunner.Data;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using VMS.TPS.Common.Model.API;
@@ -12,6 +13,7 @@ namespace EclipsePlugInRunner
     internal class MainViewModel : ViewModelBase
     {
         private readonly ScriptProxy _scriptProxy;
+        private readonly SettingsRepository _settingsRepo;
 
         private Application _app;
         private Patient _patient;
@@ -19,10 +21,13 @@ namespace EclipsePlugInRunner
         public MainViewModel(object script)
         {
             _scriptProxy = new ScriptProxy(script);
+            _settingsRepo = new SettingsRepository();
 
             OpenPatientCommand = new RelayCommand(OpenPatient);
             RunScriptCommand = new RelayCommand(RunScript);
             ExitCommand = new RelayCommand(Exit);
+
+            LoadSettings();
         }
 
         public event EventHandler ExitRequested;
@@ -31,7 +36,12 @@ namespace EclipsePlugInRunner
         public ICommand RunScriptCommand { get; private set; }
         public ICommand ExitCommand { get; private set; }
 
-        public string PatientId { get; set; }
+        private string _patientId;
+        public string PatientId
+        {
+            get { return _patientId; }
+            set { Set(ref _patientId, value); }
+        }
 
         private IEnumerable<PlanningItemViewModel> _planningItems;
         public IEnumerable<PlanningItemViewModel> PlanningItems
@@ -54,7 +64,21 @@ namespace EclipsePlugInRunner
             set { Set(ref _selectedPlanSetup, value); }
         }
 
-        public bool ShouldExit { get; set; }
+        private bool _shouldExit;
+        public bool ShouldExit
+        {
+            get { return _shouldExit; }
+            set { Set(ref _shouldExit, value); }
+        }
+
+        public ObservableCollection<PatientContext> RecentPatientContexts { get; private set; }
+
+        private PatientContext _selectedPatientContext;
+        public PatientContext SelectedPatientContext
+        {
+            get { return _selectedPatientContext; }
+            set { Set(ref _selectedPatientContext, value); }
+        }
 
         public void StartEclipse()
         {
@@ -166,6 +190,15 @@ namespace EclipsePlugInRunner
         private void Exit()
         {
             OnExitRequested();
+        }
+
+        private void LoadSettings()
+        {
+            var settings = _settingsRepo.ReadSettings();
+
+            ShouldExit = settings.ShouldExitAfterScriptEnds;
+            RecentPatientContexts =
+                new ObservableCollection<PatientContext>(settings.RecentPatientContexts);
         }
     }
 }

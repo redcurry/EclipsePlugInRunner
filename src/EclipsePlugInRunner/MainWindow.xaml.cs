@@ -13,8 +13,14 @@ namespace EclipsePlugInRunner
 
             _viewModel = viewModel;
             _viewModel.ExitRequested += (o, e) => Close();
+            _viewModel.UserMessaged += ViewModelOnUserMessaged;
 
             DataContext = _viewModel;
+        }
+
+        private void ViewModelOnUserMessaged(object sender, string message)
+        {
+            MessageBox.Show(message, "Alert", MessageBoxButton.OK);
         }
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)

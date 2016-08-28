@@ -38,6 +38,7 @@ namespace EclipsePlugInRunner
         }
 
         public event EventHandler ExitRequested;
+        public event EventHandler<string> UserMessaged;
 
         public ICommand OpenPatientContextCommand { get; private set; }
         public ICommand RemovePatientContextCommand { get; private set; }
@@ -110,6 +111,14 @@ namespace EclipsePlugInRunner
             }
         }
 
+        protected virtual void OnUserMessaged(string message)
+        {
+            if (UserMessaged != null)
+            {
+                UserMessaged(this, message);
+            }
+        }
+
         private void OpenPatientContext()
         {
             PatientId = SelectedPatientContext.PatientId;
@@ -150,6 +159,12 @@ namespace EclipsePlugInRunner
         {
             _app.ClosePatient();   // Close previous patient, if any
             _patient = _app.OpenPatientById(PatientId);
+
+            if (_patient == null)
+            {
+                OnUserMessaged("The patient \"" + PatientId + "\" was not found.");
+                return;
+            }
 
             PlanningItems = CreatePlanningItems();
 

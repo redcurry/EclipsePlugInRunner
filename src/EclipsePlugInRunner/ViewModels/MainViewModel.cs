@@ -180,7 +180,8 @@ namespace EclipsePlugInRunner.ViewModels
         {
             // Convert to a List so that the PlanningItems are created immediately;
             // otherwise, there will be problems with listening to PropertyChanged
-            return _patient.GetPlanningItems().Select(p => new PlanningItemViewModel(p)).ToList();
+            return _patient.GetPlanningItems()
+                .Select(p => new PlanningItemViewModel(p.Item1, p.Item2)).ToList();
         }
 
         private void UpdatePlanSetupsInScopeWhenPlanSetupVmIsCheckedChanged()

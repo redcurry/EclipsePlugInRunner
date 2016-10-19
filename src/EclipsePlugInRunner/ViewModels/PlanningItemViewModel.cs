@@ -1,5 +1,4 @@
 using System;
-using EclipsePlugInRunner.Helpers;
 using GalaSoft.MvvmLight;
 using VMS.TPS.Common.Model.API;
 
@@ -7,11 +6,13 @@ namespace EclipsePlugInRunner.ViewModels
 {
     internal class PlanningItemViewModel : ViewModelBase
     {
-        public PlanningItemViewModel(PlanningItem planningItem)
+        public PlanningItemViewModel(Course course, PlanningItem planningItem)
         {
+            Course = course;
             PlanningItem = planningItem;
         }
 
+        public Course Course { get; private set; }
         public PlanningItem PlanningItem { get; private set; }
 
         public string Id
@@ -21,7 +22,7 @@ namespace EclipsePlugInRunner.ViewModels
 
         public string CourseId
         {
-            get { return PlanningItem.GetCourse().Id; }
+            get { return Course.Id; }
         }
 
         public DateTime? CreationDateTime

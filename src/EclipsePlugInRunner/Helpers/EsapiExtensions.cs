@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using VMS.TPS.Common.Model.API;
 
 namespace EclipsePlugInRunner.Helpers
 {
     internal static class EsapiExtensions
     {
-        public static IEnumerable<PlanningItem> GetPlanningItems(this Patient patient)
+        public static IEnumerable<Tuple<Course, PlanningItem>> GetPlanningItems(this Patient patient)
         {
-            var planningItems = new List<PlanningItem>();
+            var planningItems = new List<Tuple<Course, PlanningItem>>();
 
             if (patient.Courses != null)
             {
@@ -15,24 +17,19 @@ namespace EclipsePlugInRunner.Helpers
                 {
                     if (course.PlanSetups != null)
                     {
-                        planningItems.AddRange(course.PlanSetups);
+                        planningItems.AddRange(course.PlanSetups
+                            .Select(p => new Tuple<Course, PlanningItem>(course, p)));
                     }
 
                     if (course.PlanSums != null)
                     {
-                        planningItems.AddRange(course.PlanSums);
+                        planningItems.AddRange(course.PlanSums
+                            .Select(p => new Tuple<Course, PlanningItem>(course, p)));
                     }
                 }
             }
 
             return planningItems;
-        }
-
-        public static Course GetCourse(this PlanningItem planningItem)
-        {
-            return planningItem is PlanSetup
-                ? ((PlanSetup)planningItem).Course
-                : ((PlanSum)planningItem).Course;
         }
     }
 }

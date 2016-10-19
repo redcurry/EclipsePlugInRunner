@@ -21,7 +21,7 @@ namespace EclipsePlugInRunner.Data
             if (other != null)
             {
                 return PatientId == other.PatientId
-                    && ActivePlanSetup.Equals(other.ActivePlanSetup)
+                    && ActivePlanSetup == other.ActivePlanSetup
                     && PlanningItemsInScope.SequenceEqual(other.PlanningItemsInScope);
             }
 

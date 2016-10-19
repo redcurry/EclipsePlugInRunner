@@ -134,9 +134,12 @@ namespace EclipsePlugInRunner.ViewModels
                 pi.IsChecked = true;  // Will add it to PlanSetupsInScope
             }
 
-            SelectedPlanSetup = PlanSetupsInScope
-                .Single(p => p.Id == SelectedPatientContext.ActivePlanSetup.Id
-                             && p.CourseId == SelectedPatientContext.ActivePlanSetup.CourseId);
+            if (SelectedPatientContext.ActivePlanSetup != null)
+            {
+                SelectedPlanSetup = PlanSetupsInScope
+                    .Single(p => p.Id == SelectedPatientContext.ActivePlanSetup.Id
+                                 && p.CourseId == SelectedPatientContext.ActivePlanSetup.CourseId);
+            }
         }
 
         private void RemovePatientContext()
@@ -293,6 +296,11 @@ namespace EclipsePlugInRunner.ViewModels
         private Data.PlanningItem MapPlanningItemViewModelToData(
             PlanningItemViewModel planningItemVm)
         {
+            if (planningItemVm == null)
+            {
+                return null;
+            }
+
             return new Data.PlanningItem
             {
                 Id = planningItemVm.Id,

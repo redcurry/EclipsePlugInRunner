@@ -58,6 +58,7 @@
         </Style>
 
         <views:PlanningItemsConverter x:Key="PlanningItemsConverter" />
+        <views:ActivePlanSetupConverter x:Key="ActivePlanSetupConverter" />
 
     </Window.Resources>
 
@@ -125,7 +126,8 @@
                         <!-- Active PlanSetup -->
                         <DataGridTextColumn
                             Header="Active PlanSetup"
-                            Binding="{Binding ActivePlanSetup.Id}"
+                            Binding="{Binding ActivePlanSetup,
+                                Converter={StaticResource ActivePlanSetupConverter}}"
                             Width="*"
                             >
                         </DataGridTextColumn>

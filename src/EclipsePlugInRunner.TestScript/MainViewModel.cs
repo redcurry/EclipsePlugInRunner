@@ -4,11 +4,16 @@ namespace EclipsePlugInRunner.TestScript
 {
     public class MainViewModel
     {
+        private readonly PlanSetup _planSetup;
+
         public MainViewModel(PlanSetup planSetup)
         {
-            PlanSetup = planSetup;
+            _planSetup = planSetup;
         }
 
-        public PlanSetup PlanSetup { get; set; }
+        public string PlanSetupId
+        {
+            get { return _planSetup != null ? _planSetup.Id : "(No active plan.)"; }
+        }
     }
 }

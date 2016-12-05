@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/redcurry/EclipsePlugInRunner</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Make backwards compatible with ESAPI v. 11 and handle no active PlanSetups.</releaseNotes>
+    <releaseNotes>Fix updating the recent patient contexts when an existing context is selected.</releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>esapi Varian</tags>
   </metadata>

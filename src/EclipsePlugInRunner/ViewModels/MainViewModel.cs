@@ -318,6 +318,10 @@ namespace EclipsePlugInRunner.ViewModels
                 RecentPatientContexts =
                     new ObservableCollection<PatientContext>(settings.RecentPatientContexts);
             }
+            else
+            {
+                RecentPatientContexts = new ObservableCollection<PatientContext>();
+            }
         }
 
         private void WriteSettings()

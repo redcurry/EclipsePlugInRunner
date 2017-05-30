@@ -130,15 +130,19 @@ namespace EclipsePlugInRunner.ViewModels
             foreach (var planningItem in SelectedPatientContext.PlanningItemsInScope)
             {
                 var pi = PlanningItems
-                    .First(p => p.Id == planningItem.Id && p.CourseId == planningItem.CourseId);
-                pi.IsChecked = true;  // Will add it to PlanSetupsInScope
+                    .FirstOrDefault(p => p.Id == planningItem.Id && p.CourseId == planningItem.CourseId);
+
+                if (pi != null)
+                {
+                    pi.IsChecked = true;  // Will add it to PlanSetupsInScope
+                }
             }
 
             if (SelectedPatientContext.ActivePlanSetup != null)
             {
                 SelectedPlanSetup = PlanSetupsInScope
-                    .Single(p => p.Id == SelectedPatientContext.ActivePlanSetup.Id
-                                 && p.CourseId == SelectedPatientContext.ActivePlanSetup.CourseId);
+                    .SingleOrDefault(p => p.Id == SelectedPatientContext.ActivePlanSetup.Id
+                                          && p.CourseId == SelectedPatientContext.ActivePlanSetup.CourseId);
             }
         }
 
@@ -157,6 +161,19 @@ namespace EclipsePlugInRunner.ViewModels
         private void RunWithPatientContext()
         {
             OpenPatientContext();
+
+            if (_patient == null)
+            {
+                OnUserMessaged("Unable to open the patient.");
+                return;
+            }
+
+            if (SelectedPlanSetup == null)
+            {
+                OnUserMessaged("Unable to find the active plan.");
+                return;
+            }
+
             RunScript();
         }
 

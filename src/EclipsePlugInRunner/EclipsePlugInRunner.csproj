@@ -79,6 +79,7 @@
   <ItemGroup>
     <Compile Include="Data\SettingsRepository.cs" />
     <Compile Include="Helpers\EsapiExtensions.cs" />
+    <Compile Include="Helpers\SmartSearch.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Views\ActivePlanSetupConverter.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">

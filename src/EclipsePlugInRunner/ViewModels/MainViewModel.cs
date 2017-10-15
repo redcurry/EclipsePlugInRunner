@@ -22,6 +22,9 @@ namespace EclipsePlugInRunner.ViewModels
         private Application _app;
         private Patient _patient;
 
+        private IEnumerable<PatientSummary> _allPatientSummaries;
+        private SmartSearch _smartSearch;
+
         public MainViewModel(object script)
         {
             _scriptProxy = new ScriptProxy(script);
@@ -56,6 +59,13 @@ namespace EclipsePlugInRunner.ViewModels
         {
             get { return _patientId; }
             set { Set(ref _patientId, value); }
+        }
+
+        private IEnumerable<PatientSummary> _patientSummaries;
+        public IEnumerable<PatientSummary> PatientSummaries
+        {
+            get { return _patientSummaries; }
+            set { Set(ref _patientSummaries, value); }
         }
 
         private IEnumerable<PlanningItemViewModel> _planningItems;
@@ -98,11 +108,17 @@ namespace EclipsePlugInRunner.ViewModels
         public void StartEclipse()
         {
             _app = Application.CreateApplication(null, null);
+            LoadPatientSummaries();
         }
 
         public void StopEclipse()
         {
             _app.Dispose();
+        }
+
+        public void UpdatePatientResults(string searchText)
+        {
+            PatientSummaries = _smartSearch.GetMatches(searchText);
         }
 
         protected virtual void OnExitRequested()
@@ -338,6 +354,20 @@ namespace EclipsePlugInRunner.ViewModels
             else
             {
                 RecentPatientContexts = new ObservableCollection<PatientContext>();
+            }
+        }
+
+        private void LoadPatientSummaries()
+        {
+            try
+            {
+                Mouse.OverrideCursor = Cursors.Wait;
+                _allPatientSummaries = _app.PatientSummaries.ToArray();
+                _smartSearch = new SmartSearch(_allPatientSummaries);
+            }
+            finally
+            {
+                Mouse.OverrideCursor = null;
             }
         }
 

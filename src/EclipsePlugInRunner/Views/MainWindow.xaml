@@ -181,15 +181,25 @@
             Margin="0,8,0,0"
             >
             <TextBlock
-                Text="Patient ID1:"
+                Text="Search patient:"
                 VerticalAlignment="Center"
                 />
-            <TextBox
+            <ComboBox
                 Name="PatientIdTextBox"
-                Text="{Binding PatientId, UpdateSourceTrigger=PropertyChanged}"
+                ItemsSource="{Binding PatientSummaries}"
+                Text="{Binding PatientId}"
+                IsEditable="True"
                 Width="128"
                 Margin="4,0,0,0"
-                />
+                PreviewTextInput="PatientIdTextBox_OnPreviewTextInput"
+                DropDownClosed="PatientIdTextBox_OnDropDownClosed"
+                >
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock><Run Text="{Binding Id, Mode=OneWay}"/> (<Run Text="{Binding LastName, Mode=OneWay}"/>, <Run Text="{Binding FirstName, Mode=OneWay}"/>)</TextBlock>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
             <Button
                 Content="Open"
                 IsDefault="True"

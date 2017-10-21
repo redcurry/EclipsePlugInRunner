@@ -29,20 +29,20 @@ namespace EclipsePlugInRunner.Helpers
         {
             var searchTerms = GetSearchTerms(searchText);
 
-            if (searchTerms.Length == 0)
+            if (searchTerms.Length == 0)         // Nothing typed
             {
                 return false;
             }
-            else if (searchTerms.Length == 1)
+            else if (searchTerms.Length == 1)    // One word
             {
                 return IsMatch(p.Id, searchTerms[0]) ||
                        IsMatch(p.LastName, searchTerms[0]) ||
                        IsMatch(p.FirstName, searchTerms[0]);
             }
-            else
+            else                                 // Two or more words
             {
-                return IsMatch(p.LastName, searchTerms[0]) && IsMatch(p.FirstName, searchTerms[1]) ||
-                       IsMatch(p.FirstName, searchTerms[0]) && IsMatch(p.LastName, searchTerms[1]);
+                return IsMatchWithLastThenFirstName(p, searchTerms) ||
+                       IsMatchWithFirstThenLastName(p, searchTerms);
             }
         }
 
@@ -55,6 +55,16 @@ namespace EclipsePlugInRunner.Helpers
         private bool IsMatch(string actual, string candidate)
         {
             return actual.ToUpper().Contains(candidate.ToUpper());
+        }
+
+        private bool IsMatchWithLastThenFirstName(PatientSummary p, string[] searchTerms)
+        {
+            return IsMatch(p.LastName, searchTerms[0]) && IsMatch(p.FirstName, searchTerms[1]);
+        }
+
+        private bool IsMatchWithFirstThenLastName(PatientSummary p, string[] searchTerms)
+        {
+            return IsMatch(p.FirstName, searchTerms[0]) && IsMatch(p.LastName, searchTerms[1]);
         }
     }
 }

@@ -61,11 +61,11 @@ namespace EclipsePlugInRunner.ViewModels
             set { Set(ref _patientId, value); }
         }
 
-        private IEnumerable<PatientSummary> _patientSummaries;
-        public IEnumerable<PatientSummary> PatientSummaries
+        private IEnumerable<PatientSummary> _patientMatches;
+        public IEnumerable<PatientSummary> PatientMatches
         {
-            get { return _patientSummaries; }
-            set { Set(ref _patientSummaries, value); }
+            get { return _patientMatches; }
+            set { Set(ref _patientMatches, value); }
         }
 
         private IEnumerable<PlanningItemViewModel> _planningItems;
@@ -116,9 +116,9 @@ namespace EclipsePlugInRunner.ViewModels
             _app.Dispose();
         }
 
-        public void UpdatePatientResults(string searchText)
+        public void UpdatePatientMatches(string searchText)
         {
-            PatientSummaries = _smartSearch.GetMatches(searchText);
+            PatientMatches = _smartSearch.GetMatches(searchText);
         }
 
         protected virtual void OnExitRequested()

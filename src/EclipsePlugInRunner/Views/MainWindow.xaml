@@ -186,7 +186,7 @@
                 />
             <ComboBox
                 Name="PatientIdTextBox"
-                ItemsSource="{Binding PatientSummaries}"
+                ItemsSource="{Binding PatientMatches}"
                 Text="{Binding PatientId}"
                 IsEditable="True"
                 Width="128"

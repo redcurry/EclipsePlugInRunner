@@ -40,7 +40,7 @@ namespace EclipsePlugInRunner.Views
 
         private void PatientIdTextBox_OnPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            _viewModel.UpdatePatientResults(PatientIdTextBox.Text + e.Text);
+            _viewModel.UpdatePatientMatches(PatientIdTextBox.Text + e.Text);
             PatientIdTextBox.IsDropDownOpen = true;
         }
 

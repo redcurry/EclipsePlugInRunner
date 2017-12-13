@@ -10,8 +10,8 @@
     <projectUrl>https://github.com/redcurry/EclipsePlugInRunner</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Fix updating the recent patient contexts when an existing context is selected.</releaseNotes>
-    <copyright>Copyright 2016</copyright>
+    <releaseNotes>Add smart search to patient search box.</releaseNotes>
+    <copyright>Copyright 2016-2017</copyright>
     <tags>esapi Varian</tags>
   </metadata>
 </package>

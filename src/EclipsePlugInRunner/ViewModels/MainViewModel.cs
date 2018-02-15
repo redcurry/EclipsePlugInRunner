@@ -107,7 +107,7 @@ namespace EclipsePlugInRunner.ViewModels
 
         public void StartEclipse()
         {
-            _app = Application.CreateApplication(null, null);
+            _app = Application.CreateApplication();
             LoadPatientSummaries();
         }
 

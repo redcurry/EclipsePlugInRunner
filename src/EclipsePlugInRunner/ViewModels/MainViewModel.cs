@@ -25,6 +25,9 @@ namespace EclipsePlugInRunner.ViewModels
         private IEnumerable<PatientSummary> _allPatientSummaries;
         private SmartSearch _smartSearch;
 
+        private readonly string _username;
+        private readonly string _password;
+
         public MainViewModel(object script)
         {
             _scriptProxy = new ScriptProxy(script);
@@ -40,6 +43,12 @@ namespace EclipsePlugInRunner.ViewModels
             ExitCommand = new RelayCommand(Exit);
 
             LoadSettings();
+        }
+
+        public MainViewModel(object script, string username, string password) : this(script)
+        {
+            _username = username;
+            _password = password;
         }
 
         public event EventHandler ExitRequested;
@@ -107,7 +116,7 @@ namespace EclipsePlugInRunner.ViewModels
 
         public void StartEclipse()
         {
-            _app = Application.CreateApplication(null, null);
+            _app = Application.CreateApplication(_username, _password);
             LoadPatientSummaries();
         }
 

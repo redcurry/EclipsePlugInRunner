@@ -10,8 +10,8 @@
     <projectUrl>https://github.com/redcurry/EclipsePlugInRunner</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Update references to support ESAPI 15.5.</releaseNotes>
-    <copyright>Copyright 2016-2018</copyright>
+    <releaseNotes>Update references to support ESAPI 15.6.</releaseNotes>
+    <copyright>Copyright 2016-2019</copyright>
     <tags>esapi Varian</tags>
   </metadata>
 </package>
